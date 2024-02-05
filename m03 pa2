@@ -1,0 +1,64 @@
+import java.math.BigInteger;
+
+public class Rational {
+    private BigInteger numerator;
+    private BigInteger denominator;
+
+    public Rational() {
+        this(BigInteger.ZERO, BigInteger.ONE); // default constructor
+    }
+
+    public Rational(BigInteger numerator, BigInteger denominator) {
+        BigInteger gcd = numerator.gcd(denominator);
+        this.numerator = numerator.divide(gcd);
+        this.denominator = denominator.divide(gcd);
+
+        if (denominator.compareTo(BigInteger.ZERO) < 0) {
+            this.numerator = this.numerator.negate();
+            this.denominator = this.denominator.negate();
+        }
+    }
+
+    public BigInteger getNumerator() {
+        return numerator;
+    }
+
+    public BigInteger getDenominator() {
+        return denominator;
+    }
+
+    public Rational add(Rational other) {
+        BigInteger newNumerator = numerator.multiply(other.denominator)
+                .add(other.numerator.multiply(denominator));
+        BigInteger newDenominator = denominator.multiply(other.denominator);
+        return new Rational(newNumerator, newDenominator);
+    }
+
+    public Rational subtract(Rational other) {
+        BigInteger newNumerator = numerator.multiply(other.denominator)
+                .subtract(other.numerator.multiply(denominator));
+        BigInteger newDenominator = denominator.multiply(other.denominator);
+        return new Rational(newNumerator, newDenominator);
+    }
+
+    public Rational multiply(Rational other) {
+        BigInteger newNumerator = numerator.multiply(other.numerator);
+        BigInteger newDenominator = denominator.multiply(other.denominator);
+        return new Rational(newNumerator, newDenominator);
+    }
+
+    public Rational divide(Rational other) {
+        BigInteger newNumerator = numerator.multiply(other.denominator);
+        BigInteger newDenominator = denominator.multiply(other.numerator);
+        return new Rational(newNumerator, newDenominator);
+    }
+
+    @Override
+    public String toString() {
+        if (denominator.equals(BigInteger.ONE)) {
+            return numerator.toString();
+        } else {
+            return numerator + "/" + denominator;
+        }
+    }
+}
